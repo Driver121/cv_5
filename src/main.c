@@ -51,10 +51,10 @@ extern  uint16_t value;
 int main(void)
 {
 
-    uint16_t pom;
+    uint16_t pom1;
 
 	int i = 0;
-
+    char ch ='X';
 
   /**
   *  IMPORTANT NOTE!
@@ -76,14 +76,17 @@ int main(void)
   /* TODO - Add your application code here */
 
    adc_init();
-   //init_NVIC();
+   initUSART2();  // usart 1
+
+
+   PutcUART2(ch); // usart 1
 
   /* Infinite loop */
   while (1)
   {
 
-
-	 pom= value;
+	  RegisterCallbackUART2(stav); // usart 1
+	 pom1= value;
 	i++;
   }
   return 0;

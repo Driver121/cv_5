@@ -11,8 +11,13 @@
 void adc_init(void);
 void init_NVIC(void);
 void ADC1_IRQHandler(void);
-void initUSART1(void);
-void PutcUART2(char ch);
 
+void initUSART2(void);  // usart 1
+void PutcUART2(char);// usart 1
+
+void RegisterCallbackUART2(void *callback);   // usart 1
+void USART2_IRQHandler(void); // usart 1
+
+void stav(uint16_t);
 
 #endif /* CV5H_H_ */
