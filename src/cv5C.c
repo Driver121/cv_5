@@ -8,7 +8,8 @@
 #include <stddef.h>
 #include "stm32l1xx.h"
 #include "cv5H.h"
-
+#include <stdio.h>
+#include <string.h>
 
 void adc_init(void)
 {
@@ -136,6 +137,24 @@ void PutcUART2(char ch){    //PutcUART1
     USART_SendData(USART2, (uint8_t) ch);   // usart 1
         while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET); // usart 1
 }
+//char pole[sizeof(double)];
+char pole[];
+void Put(char pole[])
+{
+	int i=0;
+
+	while(pole[i]!='\0')
+	{
+
+		USART_SendData(USART2, pole[i]);   // usart 1
+					        while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET); // usart 1
+		   	  i++;
+	}
+
+	USART_SendData(USART2,' ');
+    while(USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET);
+
+}
 
 void (* gCallback1)(unsigned char) = 0;
 void RegisterCallbackUART2(void *callback){  //usart 1
@@ -157,21 +176,50 @@ void USART2_IRQHandler(void)  //USART1_IRQHandler
         }
 }
 
+double pom10=0;
+
+double prevod()
+{
+
+
+	 pom10=value;
+	return  pom10*=0.000805;
+
+}
+
+int pom8=0;
+double pom9 = 0;
+
 void stav(uint16_t hodnota){
 
-	int pom8=0;
+
 
 
 	switch (hodnota){
-	case 'a' :
-		pom8=1;
-		break;
 	case 'm' :
-		pom8=2;
+		if(pom8==0)
+		{
+			pom9 = prevod();
+
+
+
+			uint8_t num1= (uint8_t)pom9;
+			sprintf(pole,"%d.%dV", num1, (uint8_t)((pom9-num1)*100));
+
+
+			Put(pole);
+			pom8++;
+		}
+		else
+		{
+		  //PutcUART2(value);
+			sprintf(pole,"%d",value);
+			Put(pole);
+			pom8=0;
+		}
+
 		break;
-	case 'b' :
-		pom8=3;
-		break;
+
 		}
 
 }

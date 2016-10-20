@@ -52,6 +52,7 @@ int main(void)
 {
 
     uint16_t pom1;
+    double pom11;
 
 	int i = 0;
     char ch ='X';
@@ -79,14 +80,16 @@ int main(void)
    initUSART2();  // usart 1
 
 
-   PutcUART2(ch); // usart 1
+  // PutcUART2(ch); // usart 1
 
   /* Infinite loop */
   while (1)
   {
 
-	  RegisterCallbackUART2(stav); // usart 1
-	 pom1= value;
+
+    RegisterCallbackUART2(stav); // usart 1
+
+
 	i++;
   }
   return 0;
