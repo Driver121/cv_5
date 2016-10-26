@@ -127,7 +127,10 @@ void initUSART2(void)   /// usart 1
       NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
       NVIC_Init(&NVIC_InitStructure);
       //choosing which event should cause interrupt
-      USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);   // usart 1
+   //   USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);   // usart 1  /////// pre adc na nacitanie hodnoty
+
+      USART_ITConfig(USART2, USART_IT_TXE, ENABLE);   // usart 1   ////////////////// pre poslednu ulohu uprava  pre posielanie hodnot
+
       // Enable USART
       USART_Cmd(USART2, ENABLE);   // usart 1
 
@@ -137,8 +140,10 @@ void PutcUART2(char ch){    //PutcUART1
     USART_SendData(USART2, (uint8_t) ch);   // usart 1
         while (USART_GetFlagStatus(USART2, USART_FLAG_TC) == RESET); // usart 1
 }
-//char pole[sizeof(double)];
+
+
 char pole[];
+
 void Put(char pole[])
 {
 	int i=0;
@@ -156,16 +161,33 @@ void Put(char pole[])
 
 }
 
+int i = 0;
+int dlzka=0;
+char znak[];
+
+void posliDoFunkcie()
+{
+	int value1=0;
+
+
+    value1=1234;
+
+	sprintf(znak,"%d",value1);
+
+    dlzka=strlen(znak);
+
+}
+
 void (* gCallback1)(unsigned char) = 0;
 void RegisterCallbackUART2(void *callback){  //usart 1
     gCallback1 = callback;
 }
 
-
+/*    ////// IRQ handler pre primanie dat k tomu patri nastavenie aj USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
 void USART2_IRQHandler(void)  //USART1_IRQHandler
 {
 	uint16_t pom = 0;
-        if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)   // usart 1
+	    if(USART_GetITStatus(USART2, USART_IT_RXNE) != RESET)   // usart 1
         {
             USART_ClearITPendingBit(USART2, USART_IT_RXNE);   // usart 1
             pom = USART_ReceiveData(USART2);    // usart 1
@@ -174,6 +196,29 @@ void USART2_IRQHandler(void)  //USART1_IRQHandler
                 gCallback1(pom);
             }
         }
+}*/
+
+
+
+ ////// IRQ handler pre primanie dat k tomu patri nastavenie aj USART_ITConfig(USART2, USART_IT_TXE, ENABLE);
+void USART2_IRQHandler(void)  //USART1_IRQHandler
+{
+
+
+	if(i<dlzka)
+	{
+			if (USART_GetFlagStatus(USART2, USART_FLAG_TC) != RESET)
+			{
+
+					if (USART_GetFlagStatus(USART2, USART_FLAG_TXE) != RESET)
+					{
+						 USART_SendData(USART2,znak[i]);
+						 USART_ClearITPendingBit(USART2, USART_FLAG_TXE);
+						 i++;
+						 USART_GetFlagStatus(USART2, USART_FLAG_TXE) == RESET;
+					}
+			}
+	}
 }
 
 double pom10=0;

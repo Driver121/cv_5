@@ -76,6 +76,7 @@ int main(void)
 
   /* TODO - Add your application code here */
 
+    posliDoFunkcie();
    adc_init();
    initUSART2();  // usart 1
 
@@ -83,11 +84,14 @@ int main(void)
   // PutcUART2(ch); // usart 1
 
   /* Infinite loop */
+
+
   while (1)
   {
 
 
-    RegisterCallbackUART2(stav); // usart 1
+   // RegisterCallbackUART2(stav); // usart 1
+
 
 
 	i++;

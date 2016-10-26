@@ -21,5 +21,9 @@ void USART2_IRQHandler(void); // usart 1
 double prevod();
 void stav(uint16_t);
 void Put(char []);
+void posliPoZnaku(char , int );
+void posliDoFunkcie();
+
+char znak[];
 
 #endif /* CV5H_H_ */
